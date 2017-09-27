@@ -1,0 +1,15 @@
+{
+    "db": {
+      "host": "localhost",
+      "user": "root",
+      "password": "a741236985b",
+      "database": "pinpost",
+      "multipleStatements": true
+    },
+    "path": {
+      "image": "/public/images/users"
+    },
+    "page": {
+      "count": 20
+    }
+  }
