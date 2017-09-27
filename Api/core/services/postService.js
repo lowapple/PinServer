@@ -4,11 +4,11 @@ var multiparty = require('multiparty');
 var fs = require('fs');
 
 // Post Database
-mongoose.connect('mongodb://localhost/pinpost', { useMongoClient : true});
+mongoose.connect('mongodb://localhost/pinpost', { useMongoClient: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-  	console.log("open");
+db.once('open', function callback() {
+    console.log("open");
 });
 
 // Post Data
@@ -16,7 +16,7 @@ var User = mongoose.model('posts', postSchema);
 
 // Post 관련 함수
 module.exports = {
-    posting : function(json, images){
+    posting: function(json, images) {
 
         var fields = [],
             files = [],
@@ -25,10 +25,10 @@ module.exports = {
 
         var form = new multiparty.Form();
 
-        form.on('field', (name, value)=>{
+        form.on('field', (name, value) => {
             console.log('file upload');
-            
-            fields.push({name: name, value: value});
+
+            fields.push({ name: name, value: value });
         });
 
         // 여기서는 파일 업로드에 대해서 반응
@@ -84,7 +84,7 @@ module.exports = {
 
                 Promise.all(dispersionList)
                     .then(() => {
-                        var data = {fields: fields, files: files, paths: paths};
+                        var data = { fields: fields, files: files, paths: paths };
 
                         resolve(data);
                     });
@@ -92,7 +92,7 @@ module.exports = {
         });
 
         form.parse(req);
-        
+
         return promise;
     }
 };

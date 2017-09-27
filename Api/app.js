@@ -18,8 +18,8 @@ var posts = require('./routes/posts');
 app.use('/users', users);
 app.use('/posts', posts);
 
-app.get('/', function (req, res) {
-  res.send('Hello World')
+app.get('/', function(req, res) {
+    res.send('Hello World')
 })
- 
+
 app.listen(3000)

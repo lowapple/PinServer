@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var postSchema = mongoose.Schema({
     title: 'string',
     contents: 'string',
-    imageId : 'string',
+    imageId: 'string',
 });
 
 module.exports = postSchema;
