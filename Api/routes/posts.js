@@ -5,15 +5,11 @@ var router = express.Router();
 var postService = require('../core/services/postService');
 
 // User Signup
-router.post('/posting', function(req, res) {
-    var username = req.body.title;
-    var email = req.body.contents;
-    // 이미지를 가져온다.
-    var password = req.body.password;
+router.post('/post/posting', function(req, res) {
+    console.log('posting');
 
-    var user = { username: username, email: email, password: password };
-
-    res.send(userService.signup(user));
+    postService.posting(req, res);
+    res.send({ "success": "fuckyou" });
 })
 
 module.exports = router;

@@ -6,7 +6,7 @@ mongoose.connect('mongodb://localhost/pinpost', { useMongoClient: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
-    console.log("open");
+    console.log("open db users");
 });
 
 // User Data
