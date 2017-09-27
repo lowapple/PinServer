@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var postSchema = require('../models/post');
 var multiparty = require('multiparty');
 var fs = require('fs');
+var dispersion = require('../modules/dispersion');
 
 // Post Database
 mongoose.connect('mongodb://localhost/pinpost', { useMongoClient: true });
@@ -58,11 +59,12 @@ module.exports = {
                     if (checkFile == true) {
                         files.push(filename);
                         writeStream.end();
-
                         var promise = dispersion.dispersion()
                             .then((result) => {
                                 var createPath = '.' + result + '/' + filename;
                                 paths.push(createPath);
+
+                                // File location change
                                 fs.renameSync(filename, createPath);
 
                                 return createPath;
@@ -85,8 +87,9 @@ module.exports = {
                 Promise.all(dispersionList)
                     .then(() => {
                         var data = { fields: fields, files: files, paths: paths };
-
                         resolve(data);
+                    }).catch((error) => {
+                        console.debug('promise error');
                     });
             });
         });
