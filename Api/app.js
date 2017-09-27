@@ -14,7 +14,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var users = require('./routes/users');
+var posts = require('./routes/posts');
 app.use('/users', users);
+app.use('/posts', posts);
 
 app.get('/', function (req, res) {
   res.send('Hello World')
