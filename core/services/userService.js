@@ -14,13 +14,29 @@ var User = mongoose.model('users', userSchema);
 
 // Signup
 module.exports = {
-    signup: function(json) {
-        var user = new User({ username: 'ndeveat', email: 'ndeveat@gmail.com', password: 'a741236985B@' });
-        return user.save(function(err, user) {
-            if (err)
-                return { success: false };
-            else
-                return { success: true };
+    signup: (json, res) =>{
+        var user = new User(json);
+        var promise = new Promise((resolve, reject)=>{
+            user.save((err, user)=>{
+                if(err)
+                    resolve(false);
+                else
+                    resolve(true);
+            })
+        }).then((result)=>{
+            result = !result;
+            return { success : result };
         });
+
+        return promise;
+    },
+    signin: (json, res)=>{
+        // 비교 후 반환
+        var promise = new Promise((resolve, reject)=>{
+            
+        }).then((result)=>{
+            
+        });
+        return promise;
     }
 };
