@@ -27,7 +27,7 @@ module.exports = {
         var form = new multiparty.Form();
 
         form.on('field', (name, value) => {
-            console.log('field upload' + 'name : ' + name + ' value : ' + value);
+            console.log('field upload' + name + ' : ' + value);
             fields.push({ name: name, value: value });
         });
 
@@ -62,7 +62,7 @@ module.exports = {
                             .then((result) => {
                                 var createPath = '.' + result + '/' + filename;
                                 paths.push(createPath);
-                                
+                                console.log('Movepath : ' + createPath);
                                 // File location change
                                 fs.renameSync(filename, createPath);
 
@@ -77,13 +77,13 @@ module.exports = {
 
         form.parse(req);
 
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             form.on('err', (err) => {
                 reject(err);
             });
 
-            form.on('close', ()=>{
-                if (files == []){ 
+            form.on('close', () => {
+                if (files == []) {
                     files = null;
                 }
                 var data = { fields: fields, files: files, paths: paths };
