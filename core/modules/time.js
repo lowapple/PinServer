@@ -19,9 +19,7 @@ module.exports = {
             leadingZeros(d.getFullYear(), 4).toString() +
             leadingZeros(d.getMonth() + 1, 2).toString() +
             leadingZeros(d.getDate(), 2).toString() +
-            leadingZeros(d.getHours(), 2).toString() +
-            leadingZeros(d.getMinutes(), 2).toString() +
-            leadingZeros(d.getSeconds(), 2).toString();
+            leadingZeros(d.getHours(), 2).toString();
 
         return s;
     }

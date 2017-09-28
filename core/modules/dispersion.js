@@ -11,7 +11,7 @@ module.exports = {
             folderName = hash.unidirectionalEncrypt(time.getTime(), 'md5');
 
         console.log('folderName : ' + folderName);
-        return folder.getCountByFolder(path)
+        return folder.getFolder(path, [folderName])
             .then((result) => {
                 if (result == 0) {
                     return folder.createFolders(path, [folderName])

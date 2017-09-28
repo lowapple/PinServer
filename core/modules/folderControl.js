@@ -6,7 +6,6 @@ var fs = require('fs'),
 module.exports = {
     getCountByFolder: (path) => {
         var folder = '.' + path;
-
         var promise = new Promise((resolve, reject) => {
             return fs.readdir(folder, (err, files) => {
                 if (err) return reject(err);
@@ -45,6 +44,22 @@ module.exports = {
             });
         });
 
+        return promise;
+    },
+    getFolder : (folder, name)=>{
+        var promise = new Promise((resolve, reject)=>{
+            require('./folderControl').isOverlap(folder, name)
+            .then((result)=>{
+                if(!result){
+                    console.log('create folder');
+                    require('./folderControl').createFolder(folder, name).then((result)=>{
+                        console.log(result);
+                    })
+                } else {
+                    console.log(true);
+                }
+            });
+        });
         return promise;
     },
     createFolders: (dir, creates) => {
