@@ -8,10 +8,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express()
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 var users = require('./routes/users');
 var posts = require('./routes/posts');

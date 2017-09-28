@@ -15,7 +15,7 @@ var User = mongoose.model('users', userSchema);
 // Signup
 module.exports = {
     signup: (json, res) =>{
-        var user = new User(json);
+        var user = new User({name:json.username, email:json.email, password:json.password});
         var promise = new Promise((resolve, reject)=>{
             user.save((err, user)=>{
                 if(err)
@@ -23,9 +23,6 @@ module.exports = {
                 else
                     resolve(true);
             })
-        }).then((result)=>{
-            result = !result;
-            return { success : result };
         });
 
         return promise;

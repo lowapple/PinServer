@@ -10,9 +10,17 @@ router.post('/user/signup', function(req, res) {
     var email = req.body.email;
     var password = req.body.password;
 
-    var user = { username: username, email: email, password: password };
+    console.log(username);
 
-    res.send(userService.signup(user, res));
+    var user = { username: username, email: email, password: password };
+    console.log(user);
+
+    userService.signup(user, res).then((result)=>{
+        if(result){
+            res.send({success:result});
+            console.log('signup ' + username);
+        }
+    });
 });
 
 router.post('/user/signin', (req, res)=>{
