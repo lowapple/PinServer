@@ -34,7 +34,6 @@ module.exports = {
         // 여기서는 파일 업로드에 대해서 반응
         form.on('part', (part) => {
             console.log('file upload');
-
             var filename,
                 size;
 
@@ -63,7 +62,7 @@ module.exports = {
                             .then((result) => {
                                 var createPath = '.' + result + '/' + filename;
                                 paths.push(createPath);
-
+                                
                                 // File location change
                                 fs.renameSync(filename, createPath);
 
@@ -76,26 +75,20 @@ module.exports = {
             }
         });
 
-        var promise = new Promise((resolve, reject) => {
+        form.parse(req);
+
+        return new Promise((resolve, reject)=>{
             form.on('err', (err) => {
                 reject(err);
             });
 
-            // 해당 part를 다 읽으면 발생
-            form.on('close', () => {
-                if (files == []) files = null;
-                Promise.all(dispersionList)
-                    .then(() => {
-                        var data = { fields: fields, files: files, paths: paths };
-                        resolve(data);
-                    }).catch((error) => {
-                        console.debug('promise error');
-                    });
+            form.on('close', ()=>{
+                if (files == []){ 
+                    files = null;
+                }
+                var data = { fields: fields, files: files, paths: paths };
+                resolve(data);
             });
         });
-
-        form.parse(req);
-
-        return promise;
     }
 };

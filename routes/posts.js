@@ -8,8 +8,12 @@ var postService = require('../core/services/postService');
 router.post('/post/posting', function(req, res) {
     console.log('posting');
 
-    postService.posting(req, res);
-    res.send({ "success": "fuckyou" });
+    postService.posting(req, res).then((data)=>{
+        res.send({ "success" : true });
+    }).catch(()=>{
+        res.send({ "success" : false})
+        console.log('posting fail');
+    });
 })
 
 module.exports = router;
