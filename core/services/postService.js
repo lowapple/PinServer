@@ -58,17 +58,8 @@ module.exports = {
                     if (checkFile == true) {
                         files.push(filename);
                         writeStream.end();
-                        var promise = dispersion.dispersion()
-                            .then((result) => {
-                                var createPath = '.' + result + '/' + filename;
-                                paths.push(createPath);
-                                console.log('Movepath : ' + createPath);
-                                // File location change
-                                fs.renameSync(filename, createPath);
-
-                                return createPath;
-                            });
-
+                        var promise = dispersion.dispersion();
+                        console.log('dispersion : ' + promise);
                         dispersionList.push(promise);
                     }
                 });

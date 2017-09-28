@@ -11,16 +11,10 @@ module.exports = {
             folderName = hash.unidirectionalEncrypt(time.getTime(), 'md5');
 
         console.log('folderName : ' + folderName);
-        return folder.getFolder(path, [folderName])
-            .then((result) => {
-                if (result == 0) {
-                    return folder.createFolders(path, [folderName])
-                        .then(() => {
-                            return path + '/' + folderName;
-                        });
-                } else {
-                    return path + '/' + folderName;
-                }
-            });
+
+        return folder.getFolder(path, folderName).then((result) => {
+            console.log('getFolder : ' + result);
+            return result;
+        });
     }
 }

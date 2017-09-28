@@ -6,6 +6,7 @@ var fs = require('fs'),
 module.exports = {
     getCountByFolder: (path) => {
         var folder = '.' + path;
+
         var promise = new Promise((resolve, reject) => {
             return fs.readdir(folder, (err, files) => {
                 if (err) return reject(err);
@@ -17,18 +18,16 @@ module.exports = {
     },
     isOverlap: (path, name) => {
         var folder = '.' + path;
-
         var promise = new Promise((resolve, reject) => {
             return fs.readdir(folder, (err, files) => {
                 if (err) throw reject(true);
-                if (files.length == 0) return resolve(false);
+                if (files.length == 0) resolve(false);
                 files.forEach((file) => {
                     if (file == name) {
-                        return resolve(true);
-                    } else {
-                        return resolve(false);
+                        resolve(true);
                     }
                 });
+                resolve(false);
             });
         });
 
@@ -46,19 +45,21 @@ module.exports = {
 
         return promise;
     },
-    getFolder : (folder, name)=>{
-        var promise = new Promise((resolve, reject)=>{
-            require('./folderControl').isOverlap(folder, name)
-            .then((result)=>{
-                if(!result){
-                    console.log('create folder');
-                    require('./folderControl').createFolder(folder, name).then((result)=>{
-                        console.log(result);
-                    })
+    getFolder: (dir, name) => {
+        var promise = new Promise((resolve, reject) => {
+            var overlap = require('./folderControl').isOverlap(dir, name).then((result) => {
+                // Not file folder
+                if (!result) {
+                    var cf = require('./folderControl').createFolder(dir, name).then((result) => {
+                        return result;
+                    });
+                    return resolve(cf);
                 } else {
-                    console.log(true);
+                    return dir + '/' + name;
                 }
             });
+
+            resolve(overlap);
         });
         return promise;
     },
