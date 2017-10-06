@@ -20,9 +20,10 @@ module.exports = {
     posting: function(req, res) {
         // name : value
         // { title : "안녕하세요" }
-        var field = [];
+        var fields = [];
         // imageName, imagePath
         var images = [];
+        var files = [];
 
         var form = new multiparty.Form();
 
@@ -59,8 +60,6 @@ module.exports = {
                         files.push(filename);
                         writeStream.end();
                         var promise = dispersion.dispersion();
-                        console.log('dispersion : ' + promise);
-                        // dispersionList.push(promise);
                     }
                 });
             }
@@ -77,7 +76,7 @@ module.exports = {
                 if (files == []) {
                     files = null;
                 }
-                var data = { fields: fields, files: files, paths: paths };
+                var data = { fields: fields, files: files };
                 resolve(data);
             });
         });

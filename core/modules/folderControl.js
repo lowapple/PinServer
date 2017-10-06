@@ -1,7 +1,6 @@
 'use strict';
 
-var fs = require('fs'),
-    path = require('path');
+var fs = require('fs');
 
 module.exports = {
     getCountByFolder: (path) => {
@@ -17,29 +16,23 @@ module.exports = {
         return promise;
     },
     isOverlap: (path, name) => {
-        var folder = '.' + path;
+        var folder = '.' + path + '/' + name;
         var promise = new Promise((resolve, reject) => {
             return fs.readdir(folder, (err, files) => {
-                if (err) throw reject(true);
-                if (files.length == 0) resolve(false);
-                files.forEach((file) => {
-                    if (file == name) {
-                        resolve(true);
-                    }
-                });
+                if (err) throw reject(err);
                 resolve(false);
             });
         });
-
         return promise;
     },
-    createFolder: (folder, name) => {
+    createFolder: (path, name) => {
         var promise = new Promise((resolve, reject) => {
-            var tg = path.join('.' + folder, name);
+            var tg = '.' + path + '/' + name;
+            console.log(tg);
 
             return fs.mkdir(tg, 777, (err) => {
-                if (err) return reject(err);
-                else return resolve(true);
+                if (err) resolve(false);
+                resolve(true);
             });
         });
 
@@ -48,9 +41,11 @@ module.exports = {
     getFolder: (dir, name) => {
         var promise = new Promise((resolve, reject) => {
             var overlap = require('./folderControl').isOverlap(dir, name).then((result) => {
+                console.log('overlap : ' + result)
                 // Not file folder
                 if (!result) {
                     var cf = require('./folderControl').createFolder(dir, name).then((result) => {
+                        console.log('create folder : ' + result)
                         return result;
                     });
                     return resolve(cf);

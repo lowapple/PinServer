@@ -6,7 +6,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var app = express()
+var app = express();
+var fs = require('fs');
+
+fs.mkdir('./test',777, (err)=>{
+    console.log('create folder');
+})
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))

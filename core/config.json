@@ -7,7 +7,7 @@
         "multipleStatements": true
     },
     "path": {
-        "image": "/public/images/users"
+        "image": "/public/images"
     },
     "page": {
         "count": 20
