@@ -59,7 +59,16 @@ module.exports = {
                     if (checkFile == true) {
                         files.push(filename);
                         writeStream.end();
-                        var promise = dispersion.dispersion();
+                        // get folder
+                        // move images
+                        dispersion.dispersion().then((result) => {
+                            var imagePath = '.' + result + '/' + filename;
+                            console.log('image save : ' + imagePath);
+                            
+                            fs.renameSync(filename, imagePath, (err)=>{
+                            })
+                            return result;
+                        });;
                     }
                 });
             }

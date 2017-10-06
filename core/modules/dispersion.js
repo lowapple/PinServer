@@ -10,11 +10,6 @@ module.exports = {
         var path = config.path.image,
             folderName = hash.unidirectionalEncrypt(time.getTime(), 'md5');
 
-        console.log('folderName : ' + folderName);
-
-        return folder.getFolder(path, folderName).then((result) => {
-            console.log('getFolder : ' + result);
-            return result;
-        });
+        return folder.getFolder(path, folderName);
     }
 }

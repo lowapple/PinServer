@@ -30,7 +30,7 @@ module.exports = {
             var tg = '.' + path + '/' + name;
             console.log(tg);
 
-            return fs.mkdir(tg, 777, (err) => {
+            return fs.mkdir(tg,'0777', (err) => {
                 if (err) resolve(false);
                 resolve(true);
             });
@@ -41,12 +41,9 @@ module.exports = {
     getFolder: (dir, name) => {
         var promise = new Promise((resolve, reject) => {
             var overlap = require('./folderControl').isOverlap(dir, name).then((result) => {
-                console.log('overlap : ' + result)
-                // Not file folder
                 if (!result) {
                     var cf = require('./folderControl').createFolder(dir, name).then((result) => {
-                        console.log('create folder : ' + result)
-                        return result;
+                        return dir + '/' + name;
                     });
                     return resolve(cf);
                 } else {
