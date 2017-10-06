@@ -18,11 +18,11 @@ var User = mongoose.model('posts', postSchema);
 // Post 관련 함수
 module.exports = {
     posting: function(req, res) {
-
-        var fields = [],
-            files = [],
-            paths = [],
-            dispersionList = [];
+        // name : value
+        // { title : "안녕하세요" }
+        var field = [];
+        // imageName, imagePath
+        var images = [];
 
         var form = new multiparty.Form();
 
@@ -60,7 +60,7 @@ module.exports = {
                         writeStream.end();
                         var promise = dispersion.dispersion();
                         console.log('dispersion : ' + promise);
-                        dispersionList.push(promise);
+                        // dispersionList.push(promise);
                     }
                 });
             }
