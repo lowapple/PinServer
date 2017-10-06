@@ -19,8 +19,8 @@ module.exports = {
         var folder = '.' + path + '/' + name;
         var promise = new Promise((resolve, reject) => {
             return fs.readdir(folder, (err, files) => {
-                if (err) throw reject(err);
-                resolve(false);
+                if (err) resolve(false);
+                resolve(true);
             });
         });
         return promise;
