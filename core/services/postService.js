@@ -1,19 +1,8 @@
-var mongoose = require('mongoose');
-var postSchema = require('../models/post');
+'use strict';
+
 var multiparty = require('multiparty');
 var fs = require('fs');
 var dispersion = require('../modules/dispersion');
-
-// Post Database
-mongoose.connect('mongodb://localhost/pinpost', { useMongoClient: true });
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback() {
-    console.log("open db posts");
-});
-
-// Post Data
-var User = mongoose.model('posts', postSchema);
 
 // Post 관련 함수
 module.exports = {
@@ -46,7 +35,7 @@ module.exports = {
             } else {
                 filename = part.filename;
                 size = part.byteCount;
-                filetype = part.headers['content-type'].split('/')[1];
+                var filetype = part.headers['content-type'].split('/')[1];
                 
                 console.log(filetype);
 
@@ -97,8 +86,8 @@ module.exports = {
                 }
                 Promise.all(dispersions).then(()=>{
                     var data = { fields: fields, files: files };
-                    
-                    resolve(data);
+                    var promise = require('../models/post').posting_query(data);
+                    resolve(promise);
                 });
             });
         });
