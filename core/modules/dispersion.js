@@ -6,10 +6,13 @@ var folder = require('./folderControl'),
     hash = require('./hash');
 
 module.exports = {
-    dispersion: () => {
+    dispersion: (filename) => {
         var path = config.path.image,
-            folderName = hash.unidirectionalEncrypt(time.getTime(), 'md5');
+            folderName = hash.unidirectionalEncrypt(time.getTime() + filename, 'md5');
 
-        return folder.getFolder(path, folderName);
+        return new Promise((resolve, reject)=>{
+            resolve('.' + path + '/' + folderName)
+        });
+        // return folder.getFolder(path, folderName);
     }
 }

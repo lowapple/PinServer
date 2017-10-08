@@ -21,10 +21,9 @@ module.exports = {
         // name : value
         // { title : "안녕하세요" }
         var fields = [];
-        // imageName, imagePath
-        var images = [];
         var files = [];
-
+        var dispersions = [];
+        var fileCount = 0;
         var form = new multiparty.Form();
 
         form.on('field', (name, value) => {
@@ -47,6 +46,9 @@ module.exports = {
             } else {
                 filename = part.filename;
                 size = part.byteCount;
+                filetype = part.headers['content-type'].split('/')[1];
+                
+                console.log(filetype);
 
                 // 파일이 맞으면 여기 들어옴
                 // 파일 fs로 스트림 저장
@@ -57,18 +59,26 @@ module.exports = {
                 // data에서 파일을 다 읽으면 발생
                 part.on('end', () => {
                     if (checkFile == true) {
-                        files.push(filename);
                         writeStream.end();
                         // get folder
                         // move images
-                        dispersion.dispersion().then((result) => {
-                            var imagePath = '.' + result + '/' + filename;
-                            
+                        var promise = dispersion.dispersion(filename).then((result) => {
+                            var imagePath = result + '.' + filetype;
                             fs.renameSync(filename, imagePath, (err)=>{
                                 console.log('image save : ' + imagePath);                                
                             })
-                            return result;
-                        });;
+                            fileCount += 1;
+                            files.push(
+                                {
+                                    count : fileCount,
+                                    origin : filename,
+                                    path : imagePath,
+                                    type : filetype,
+                                }
+                            );
+                        });
+
+                        dispersions.push(promise);
                     }
                 });
             }
@@ -85,9 +95,11 @@ module.exports = {
                 if (files == []) {
                     files = null;
                 }
-                var data = { fields: fields, files: files };
-                
-                resolve(data);
+                Promise.all(dispersions).then(()=>{
+                    var data = { fields: fields, files: files };
+                    
+                    resolve(data);
+                });
             });
         });
     }

@@ -16,23 +16,31 @@ module.exports = {
         return promise;
     },
     isOverlap: (path, name) => {
-        var folder = '.' + path + '/' + name;
+        var folder = '.' + path;
+        
         var promise = new Promise((resolve, reject) => {
             return fs.readdir(folder, (err, files) => {
-                if (err) resolve(false);
-                resolve(true);
+                if(err) throw reject(true);
+                if(files.length == 0) return resolve(false);
+                files.forEach((file) => {
+                    if(file == name) {
+                        return resolve(true);
+                    } else {
+                        return resolve(false);
+                    }
+                });
             });
         });
+
         return promise;
     },
     createFolder: (path, name) => {
         var promise = new Promise((resolve, reject) => {
-            var tg = '.' + path + '/' + name;
-            console.log(tg);
+            var tg = path.join('.' + folder, name);
 
-            return fs.mkdir(tg,'0777', (err) => {
-                if (err) resolve(false);
-                resolve(true);
+            return fs.mkdir(tg, '777', (err) => {
+                if(err) return reject(err);
+                else return resolve(true);
             });
         });
 

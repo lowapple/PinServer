@@ -9,7 +9,7 @@ router.post('/post/posting', function(req, res) {
     console.log('posting');
 
     postService.posting(req, res).then((data)=>{
-        res.send({ "success" : true });
+        var result = data;
     }).catch(()=>{
         res.send({ "success" : false})
         console.log('posting fail');

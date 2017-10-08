@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 // sns의 로그인 형태
 var snsSchema= mongoose.Schema({
-    name: 'string',
+    name: 'String',
 });
 
 module.exports = snsSchema;
