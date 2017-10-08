@@ -3,7 +3,8 @@
 var mongoose = require('mongoose');
 
 var mediaSchema = mongoose.Schema({
-    id : 'string',
+    id : 'int',
+    count : 'int',
     path : 'string'
 });
 
