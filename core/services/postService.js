@@ -63,9 +63,9 @@ module.exports = {
                         // move images
                         dispersion.dispersion().then((result) => {
                             var imagePath = '.' + result + '/' + filename;
-                            console.log('image save : ' + imagePath);
                             
                             fs.renameSync(filename, imagePath, (err)=>{
+                                console.log('image save : ' + imagePath);                                
                             })
                             return result;
                         });;
@@ -86,6 +86,7 @@ module.exports = {
                     files = null;
                 }
                 var data = { fields: fields, files: files };
+                
                 resolve(data);
             });
         });
