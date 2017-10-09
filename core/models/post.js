@@ -2,11 +2,17 @@
 
 var mongoose = require('mongoose');
 // Post Database
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/pinpost', { useMongoClient: true });
+
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
     console.log("open db posts");
+});
+
+var postCount = db.collection('posts').find().count((value)=>{
+    console.log(value);
 });
 
 // 파일, 이미지 종류는 해시값을 계산해서 저장한다.
@@ -23,14 +29,21 @@ var postSchema = mongoose.Schema({
 var Post = mongoose.model('posts', postSchema);
 
 module.exports = {
-    posting_query : (data)=>{        
+    posting_query : (data)=>{
         try{
             var fields = data.fields;
             var files = data.files;
-            
+
             var title = fields.find((value)=>{ return value.name == "Title"; });
             var contents = fields.find((value)=>{ return value.name == "Contents"; });
             var images = "";
+
+            files.forEach((value, index)=>{
+                images += value.path;
+                if (index != files.length-1){
+                    images += ",";
+                }
+            });
         }
         catch (err) {
             console.log(err);
@@ -48,14 +61,17 @@ module.exports = {
             )
 
             var promise = new Promise((resolve, reject)=>{
-                post.save((err, post)=>{
+                post.save((err)=>{
                     if(err){
+                        console.log('post error : ' + err);
                         reject(err);
                     }else {
+                        console.log('sending post : ' + post);
                         resolve(true);
                     }
                 })
-            })
+            });
+
             return promise;
         }
     }

@@ -56,10 +56,8 @@ module.exports = {
                             fs.renameSync(filename, imagePath, (err)=>{
                                 console.log('image save : ' + imagePath);                                
                             })
-                            fileCount += 1;
                             files.push(
                                 {
-                                    count : fileCount,
                                     origin : filename,
                                     path : imagePath,
                                     type : filetype,
@@ -81,9 +79,6 @@ module.exports = {
             });
 
             form.on('close', () => {
-                if (files == []) {
-                    files = null;
-                }
                 Promise.all(dispersions).then(()=>{
                     var data = { fields: fields, files: files };
                     var promise = require('../models/post').posting_query(data);
