@@ -14,9 +14,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
 app.use(bodyParser.json())
 
-var users = require('./routes/user');
+var user = require('./routes/user');
 var posts = require('./routes/post');
-app.use('/', users);
+app.use('/', user);
 app.use('/', posts);
 
 app.get('/', function(req, res) {

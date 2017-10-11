@@ -1,10 +1,12 @@
-'use strict';
-
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-// sns의 로그인 형태
-var snsSchema= mongoose.Schema({
-    name: 'String',
+var snsSchema = new Schema({
+    author : String,
+    sns_name : String,
+    is_login : { type : Boolean, default : false }
 });
 
-module.exports = snsSchema;
+var SNS = mongoose.model('sns', snsSchema);
+
+module.exports = SNS;
