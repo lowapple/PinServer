@@ -9,11 +9,12 @@ module.exports = {
     posting_query : (req, res, data)=>{
         try{
             var fields = data.fields;
+            var files = data.files;
+          
             var user_id = fields.find((value)=>{ return value.name == "user_id"; }).value;
             var sns_list = fields.find((value)=>{return value.name == "sns"; }).value;
 
             // 이미지 삽입
-            var files = data.files;
             var title = fields.find((value)=>{ return value.name == "Title"; }).value;
             var contents = fields.find((value)=>{ return value.name == "Contents"; }).value;
             
@@ -48,17 +49,18 @@ module.exports = {
                         });
 
                         post.save((err)=>{
-                            if(err){
+                            if (err) {
                                 console.log('post error : ' + err);
                                 res.json({result : false});
                             } else {
                                 console.log('sending post : ' + post);
+                                // 미디어 추가
                                 require('./media').add_media(post_id, files);
                                 res.json({result : true});
                             }
                         });
                     }
-                })
+                });
             });
         }
     },
@@ -66,5 +68,17 @@ module.exports = {
         fileLoader.get_postdata(req).then((data)=>{
             require('./post').posting_query(req, res, data);
         });
+    },
+    get_posts : (req, res)=>{
+        var user_id = req.body.user_id;
+        var page = parseInt(req.body.page);
+        
+        Post.find({
+            author : user_id
+        }, (err, posts)=>{
+            if(!posts)
+                res.json({ result : null })
+            res.json({posts});
+        }).sort({ date : -1 }).skip(page).limit(2);
     }
 };

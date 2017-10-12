@@ -53,8 +53,7 @@ module.exports = {
                             fs.renameSync(filename, imagePath, (err)=>{
                                 console.log('image save : ' + imagePath);                                
                             })
-                            files.push(
-                                {
+                            files.push({
                                     origin : filename,
                                     path : imagePath,
                                     type : filetype,
