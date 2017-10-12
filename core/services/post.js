@@ -8,14 +8,14 @@ var Post = require('../models/post');
 module.exports = {
     posting_query : (req, res, data)=>{
         try{
-            var author = 'ndeveat';
-            var post_id = 1;
             var fields = data.fields;
+            var user_id = fields.find((value)=>{ return value.name == "user_id"; }).value;
+            var sns_list = fields.find((value)=>{return value.name == "sns"; }).value;
 
             // 이미지 삽입
             var files = data.files;
-            var title = fields.find((value)=>{ return value.name == "Title"; });
-            var contents = fields.find((value)=>{ return value.name == "Contents"; });
+            var title = fields.find((value)=>{ return value.name == "Title"; }).value;
+            var contents = fields.find((value)=>{ return value.name == "Contents"; }).value;
             
             var images = "";
             files.forEach((value, index)=>{
@@ -24,39 +24,41 @@ module.exports = {
                     images += ",";
                 }
             });
-
-            var sns = req.body.sns;
         }
         catch (err) {
             console.log(err);
         }
         finally {
-            Post.findOne({
-                author : author,
-                post_id : post_id
-            }, (err, rpost)=>{
-                if(!rpost){
-                    var post = new Post({
-                            author : 'req.body.user_id',
-                            post_id : 1,
-                            title : title.value,
-                            contents : title.value,
+            Post.count({
+                author : user_id
+            }, (err, post_count)=>{
+                var post_id = post_count + 1;
+                Post.findOne({
+                    author : user_id,
+                    post_id : post_id
+                }, (err, rpost)=>{
+                    if(!rpost){
+                        var post = new Post({
+                            author : user_id,
+                            post_id : post_id,
+                            title : title,
+                            contents : contents,
                             images : images,
-                            sns : sns
-                        }
-                    );
+                            sns : sns_list
+                        });
 
-                    post.save((err)=>{
-                        if(err){
-                            console.log('post error : ' + err);
-                            res.json({result : false});
-                        } else {
-                            console.log('sending post : ' + post);
-                            require('./media').add_media(post_id, files);
-                            res.json({result : true});
-                        }
-                    });
-                }
+                        post.save((err)=>{
+                            if(err){
+                                console.log('post error : ' + err);
+                                res.json({result : false});
+                            } else {
+                                console.log('sending post : ' + post);
+                                require('./media').add_media(post_id, files);
+                                res.json({result : true});
+                            }
+                        });
+                    }
+                })
             });
         }
     },
