@@ -1,90 +1,68 @@
-'use strict';
-
 var multiparty = require('multiparty');
 var fs = require('fs');
 var dispersion = require('../modules/dispersion');
+var fileLoader = require('../modules/fileLoader')
+var Post = require('../models/post');
 
 // Post 관련 함수
 module.exports = {
-    posting: function(req, res) {
-        // name : value
-        // { title : "안녕하세요" }
-        var fields = [];
-        var files = [];
-        var dispersions = [];
-        var fileCount = 0;
-        var form = new multiparty.Form();
+    posting_query : (req, res, data)=>{
+        try{
+            var author = 'ndeveat';
+            var post_id = 1;
+            var fields = data.fields;
 
-        form.on('field', (name, value) => {
-            console.log('field upload' + name + ' : ' + value);
-            fields.push({ name: name, value: value });
-        });
-
-        // 여기서는 파일 업로드에 대해서 반응
-        form.on('part', (part) => {
-            console.log('file upload');
-            var filename,
-                size;
-
-            var checkFile = (part.filename != '');
-
-            // 파일인지 아닌지 구분하는 구문
-            if (checkFile == false) {
-                // 처리를 넘어감
-                part.resume();
-            } else {
-                filename = part.filename;
-                size = part.byteCount;
-                var filetype = part.headers['content-type'].split('/')[1];
-                
-                console.log(filetype);
-
-                // 파일이 맞으면 여기 들어옴
-                // 파일 fs로 스트림 저장
-                var writeStream = fs.createWriteStream(filename);
-                writeStream.filename = filename;
-                // HTTP request 스트림과 파일 writeStream을 파이프로 연결
-                part.pipe(writeStream);
-                // data에서 파일을 다 읽으면 발생
-                part.on('end', () => {
-                    if (checkFile == true) {
-                        writeStream.end();
-                        // get folder
-                        // move images
-                        var promise = dispersion.dispersion(filename).then((result) => {
-                            var imagePath = result + '.' + filetype;
-                            fs.renameSync(filename, imagePath, (err)=>{
-                                console.log('image save : ' + imagePath);                                
-                            })
-                            files.push(
-                                {
-                                    origin : filename,
-                                    path : imagePath,
-                                    type : filetype,
-                                }
-                            );
-                        });
-
-                        dispersions.push(promise);
-                    }
-                });
-            }
-        });
-
-        form.parse(req);
-
-        return new Promise((resolve, reject) => {
-            form.on('err', (err) => {
-                reject(err);
+            // 이미지 삽입
+            var files = data.files;
+            var title = fields.find((value)=>{ return value.name == "Title"; });
+            var contents = fields.find((value)=>{ return value.name == "Contents"; });
+            
+            var images = "";
+            files.forEach((value, index)=>{
+                images += value.path;
+                if (index != files.length-1){
+                    images += ",";
+                }
             });
 
-            form.on('close', () => {
-                Promise.all(dispersions).then(()=>{
-                    var data = { fields: fields, files: files };
-                    var promise = require('../models/post').posting_query(data);
-                    resolve(promise);
-                });
+            var sns = req.body.sns;
+        }
+        catch (err) {
+            console.log(err);
+        }
+        finally {
+            Post.findOne({
+                author : author,
+                post_id : post_id
+            }, (err, rpost)=>{
+                if(!rpost){
+                    var post = new Post({
+                            author : 'req.body.user_id',
+                            post_id : 1,
+                            title : title.value,
+                            contents : title.value,
+                            images : images,
+                            sns : sns
+                        }
+                    );
+
+                    post.save((err)=>{
+                        if(err){
+                            console.log('post error : ' + err);
+                            res.json({result : false});
+                        } else {
+                            console.log('sending post : ' + post);
+                            require('./media').add_media(post_id, files);
+                            res.json({result : true});
+                        }
+                    });
+                }
             });
+        }
+    },
+    posting : (req, res)=>{
+        fileLoader.get_postdata(req).then((data)=>{
+            require('./post').posting_query(req, res, data);
         });
     }
 };

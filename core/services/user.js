@@ -1,13 +1,5 @@
-var mongoose = require('mongoose');
-var User = require('../models/user');
 
-// User Database
-mongoose.connect('mongodb://localhost/pinpost', { useMongoClient: true });
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback() {
-    console.log("open db user");
-});
+var User = require('../models/user');
 
 module.exports = {
     find_user : (name)=>{
@@ -31,8 +23,8 @@ module.exports = {
             // 유저가 없을때만 회원가입한다.
             if(!result) {
                 var user = new User({
+                    user_id : '1',
                     sns_name : req.body.sns_name,
-                    name: req.body.name,
                     email: req.body.email
                 });
 
