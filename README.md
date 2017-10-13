@@ -1,5 +1,6 @@
 # PinServer
-> NodeJS, Express ..
+> Web : NodeJS, Express ..
+> DB : mongoDB 3.4
 
 ## API
 * post
