@@ -79,6 +79,6 @@ module.exports = {
             if(!posts)
                 res.json({ result : null })
             res.json({posts});
-        }).sort({ date : -1 }).skip(page).limit(2);
+        }).sort({ date : -1 }).skip(page).limit(10);
     }
 };

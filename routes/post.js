@@ -12,4 +12,5 @@ router.post('/post/posting', function(req, res) {
 router.post('/post/postlist', (req, res)=>{
     post.get_posts(req, res);
 });
+
 module.exports = router;

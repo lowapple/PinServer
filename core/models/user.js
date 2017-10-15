@@ -2,9 +2,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-    user_id : String,
-    sns_name : String,
+    id : Number,
+    name : String,
     email: String,
+    password : String,
     singup_date : { type: Date, default: Date.now }
 });
 
