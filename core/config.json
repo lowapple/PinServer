@@ -1,15 +1,11 @@
 {
-    "db": {
-        "host": "localhost",
-        "user": "root",
-        "password": "a741236985b",
-        "database": "pinpost",
-        "multipleStatements": true
-    },
     "path": {
         "image": "/public/images"
     },
-    "page": {
-        "count": 20
+    "error": {
+        "user": {
+            "not_found_user": "유저가 존재하지 않습니다.",
+            "is_signup_user": "이미 가입한 이메일 입니다."
+        }
     }
 }

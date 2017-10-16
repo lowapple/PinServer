@@ -1,5 +1,6 @@
 
 var User = require('../models/user');
+var config = require('../config');
 
 module.exports = {
     /*
@@ -34,7 +35,7 @@ module.exports = {
             });
             if(!user) return res.status(404).json({
                 return : false,
-                error : 'user not fount'
+                error : config.error.user.not_found_user
             });
 
             res.json({
@@ -74,9 +75,6 @@ module.exports = {
     
                     user.save((err)=>{
                         if(err){
-                            // console.error(err);
-                            // res.json({result : false, signup : false});
-                            // return;
                             res.status(500).json({
                                 result : false,
                                 error : err
@@ -87,11 +85,10 @@ module.exports = {
                     });
                 });
             } else {
-                // res.json({
-                //    result : true, 
-                //    signup : false
-                // })
-                require('./user').signin(req, res);
+                res.json({
+                    result : false,
+                    err : config.error.user.is_signup_user
+                });
             }
         })
     },
