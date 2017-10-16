@@ -9,8 +9,12 @@ router.post('/user/user', (req, res)=>{
 });
 
 // User Signup
-router.post('/user/signup', function(req, res) {
+router.post('/user/signup', (req, res)=> {
     user.signup(req, res);
+});
+
+router.post('/user/signin', (req, res)=>{
+    user.signin(req, res);
 });
 
 module.exports = router;

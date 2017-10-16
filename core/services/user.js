@@ -74,18 +74,48 @@ module.exports = {
     
                     user.save((err)=>{
                         if(err){
-                            console.error(err);
-                            res.json({result : false, signup : false});
+                            // console.error(err);
+                            // res.json({result : false, signup : false});
+                            // return;
+                            res.status(500).json({
+                                result : false,
+                                error : err
+                            });
                             return;
                         }
-                        else {
-                            res.json({result : true, signup : true});
-                        }
+                        require('./user').signin(req, res);
                     });
                 });
             } else {
-                res.json({result : true, signup : false})
+                // res.json({
+                //    result : true, 
+                //    signup : false
+                // })
+                require('./user').signin(req, res);
             }
         })
+    },
+    // 로그인
+    signin: (req, res) =>{
+        User.findOne({
+            email : req.body.email,
+            password : req.body.password
+        }, (err, user)=>{
+            if(err) res.status(500).json({
+                result : false,
+                error : err
+            });
+            if(!user){
+                res.status(404).json({
+                    result : false,
+                    error : 'user not found'
+                });
+            }else {
+                res.json({
+                    result : true,
+                    user : user
+                });
+            }
+        });
     }
 };
