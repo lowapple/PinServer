@@ -1,11 +1,10 @@
 var multiparty = require('multiparty');
 var fs = require('fs');
 var dispersion = require('../modules/dispersion');
+var config = require('../config');
 
 module.exports = {
     get_postdata : function(req) {
-        // name : value
-        // { title : "안녕하세요" }
         var fields = [];
         var files = [];
         var dispersions = [];
@@ -13,29 +12,21 @@ module.exports = {
         var form = new multiparty.Form();
 
         form.on('field', (name, value) => {
-            console.log('field upload' + name + ' : ' + value);
+            console.log(name + ' : ' + value);
             fields.push({ name: name, value: value });
         });
 
         // 여기서는 파일 업로드에 대해서 반응
         form.on('part', (part) => {
-            console.log('file upload');
-            var filename,
-                size;
-
             var checkFile = (part.filename != '');
-
             // 파일인지 아닌지 구분하는 구문
             if (checkFile == false) {
                 // 처리를 넘어감
                 part.resume();
             } else {
-                filename = part.filename;
-                size = part.byteCount;
-                var filetype = part.headers['content-type'].split('/')[1];
-                
-                console.log(filetype);
-
+                var filename = part.filename;
+                var filetype = filename.split('.')[1];
+                console.log(filename);
                 // 파일이 맞으면 여기 들어옴
                 // 파일 fs로 스트림 저장
                 var writeStream = fs.createWriteStream(filename);
@@ -49,13 +40,11 @@ module.exports = {
                         // get folder
                         // move images
                         var promise = dispersion.dispersion(filename).then((result) => {
-                            var imagePath = result + '.' + filetype;
-                            fs.renameSync(filename, imagePath, (err)=>{
-                                console.log('image save : ' + imagePath);                                
-                            })
+                            var imagePath = '.' + config.path.image + '/' + result + '.' + filetype;
+                            fs.renameSync(filename, imagePath, (err)=>{});
                             files.push({
                                     origin : filename,
-                                    path : imagePath,
+                                    name : result,
                                     type : filetype,
                                 }
                             );
@@ -81,5 +70,15 @@ module.exports = {
                 });
             });
         });
+    },
+    get_image: (filename, filetype)=>{
+        var path = '.' + config.path.image + '/' + filename + '.' + filetype;
+        console.log(path);
+        var promise = new Promise((resolve, reject)=>{
+            fs.readFile(path, (err, data)=>{
+                resolve(data);
+            });
+        });
+        return promise;
     }
 }

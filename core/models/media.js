@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var mediaSchema = Schema({
     post_id : Number,      // 포스트 ID
+    id : String,    // 이미지 위치
     count : Number,   // 이미지 순서
-    path : String,    // 이미지 위치
     origin : String,  // 원제
     type : String
 });

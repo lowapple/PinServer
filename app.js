@@ -16,19 +16,20 @@ db.once('open', function callback() {
     console.log("open db");
 });
 
-// parse application/x-www-form-urlencoded
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }))
-
-// parse application/json
 app.use(bodyParser.json())
 
 var user = require('./routes/user');
 var posts = require('./routes/post');
+var media = require('./routes/media');
+var sns = require('./routes/sns');
 app.use('/', user);
 app.use('/', posts);
+app.use('/', media);
 
 app.get('/', function(req, res) {
-    res.send('Hello World')
+    res.send('PinPost API Server');
 })
 
-app.listen(3000)
+app.listen(3000);

@@ -6,8 +6,8 @@ var Schema = mongoose.Schema;
  */
 var snsSchema = new Schema({
     author : String,
-    sns_name : String,
-    post_count : Number
+    name : String,
+    count : Number
 });
 
 var SNS = mongoose.model('sns', snsSchema);

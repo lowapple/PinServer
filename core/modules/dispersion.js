@@ -7,12 +7,9 @@ var folder = require('./folderControl'),
 
 module.exports = {
     dispersion: (filename) => {
-        var path = config.path.image,
-            folderName = hash.unidirectionalEncrypt(time.getTime() + filename, 'md5');
-
+        var folderName = hash.unidirectionalEncrypt(time.getTime() + filename, 'md5');
         return new Promise((resolve, reject)=>{
-            resolve('.' + path + '/' + folderName)
+            resolve(folderName);
         });
-        // return folder.getFolder(path, folderName);
     }
 }

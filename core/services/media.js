@@ -1,5 +1,5 @@
 var Media = require('../models/media');
-
+var FileLoader = require('../modules/fileLoader');
 module.exports = {
     add_media : (post_id, files) => {
         files.forEach((value, index)=>{
@@ -10,8 +10,8 @@ module.exports = {
                 if(!media){
                     var media = new Media({
                         post_id : post_id,
+                        id : value.name,
                         count : index,
-                        path : value.path,
                         origin : value.origin,
                         type : value.type
                     });
@@ -27,7 +27,13 @@ module.exports = {
             })
         });
     },
-    get_media : (req, res) => {
-
+    get_media: (req, res)=>{
+        Media.findOne({
+            id : req.params.media_id
+        }, (err, media)=>{
+            res.json({media});
+        }).sort({
+            count : 1
+        });
     }
 };

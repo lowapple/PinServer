@@ -1,7 +1,7 @@
 var multiparty = require('multiparty');
 var fs = require('fs');
 var dispersion = require('../modules/dispersion');
-var fileLoader = require('../modules/fileLoader')
+var fileLoader = require('../modules/fileLoader');
 var Post = require('../models/post');
 
 // Post 관련 함수
@@ -10,17 +10,21 @@ module.exports = {
         try{
             var fields = data.fields;
             var files = data.files;
-          
+            // User ID
             var user_id = fields.find((value)=>{ return value.name == "user_id"; }).value;
-            var sns_list = fields.find((value)=>{return value.name == "sns"; }).value;
+            // SNS
+            var sns_list = fields.find((value)=>{ return value.name == "sns"; }).value;
+            var sns = JSON.parse(sns_list)["sns"];
+            console.log(sns);
 
-            // 이미지 삽입
-            var title = fields.find((value)=>{ return value.name == "Title"; }).value;
-            var contents = fields.find((value)=>{ return value.name == "Contents"; }).value;
-            
+            // Title
+            var title = fields.find((value)=>{ return value.name == "title"; }).value;
+            // Contents
+            var contents = fields.find((value)=>{ return value.name == "contents"; }).value;
+            // Images
             var images = "";
             files.forEach((value, index)=>{
-                images += value.path;
+                images += value.name;
                 if (index != files.length-1){
                     images += ",";
                 }
@@ -36,16 +40,16 @@ module.exports = {
                 var post_id = post_count + 1;
                 Post.findOne({
                     author : user_id,
-                    post_id : post_id
+                    id : post_id
                 }, (err, rpost)=>{
                     if(!rpost){
                         var post = new Post({
                             author : user_id,
-                            post_id : post_id,
+                            id : post_id,
                             title : title,
                             contents : contents,
                             images : images,
-                            sns : sns_list
+                            sns : sns
                         });
 
                         post.save((err)=>{
@@ -56,6 +60,12 @@ module.exports = {
                                 console.log('sending post : ' + post);
                                 // 미디어 추가
                                 require('./media').add_media(post_id, files);
+                                sns = sns.split(',');
+                                sns.forEach((value, index)=>{
+                                    if(value != ''){
+                                        require('./sns').add_post(user_id, value);
+                                    }
+                                });
                                 res.json({result : true});
                             }
                         });
