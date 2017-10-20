@@ -26,7 +26,7 @@ module.exports = {
             } else {
                 var filename = part.filename;
                 var filetype = filename.split('.')[1];
-                console.log(filename);
+                console.log(part);
                 // 파일이 맞으면 여기 들어옴
                 // 파일 fs로 스트림 저장
                 var writeStream = fs.createWriteStream(filename);
@@ -42,6 +42,37 @@ module.exports = {
                         var promise = dispersion.dispersion(filename).then((result) => {
                             var imagePath = '.' + config.path.image + '/' + result + '.' + filetype;
                             fs.renameSync(filename, imagePath, (err)=>{});
+                            var gmImage = require('gm')(imagePath);
+                            gmImage.size((err, value)=>{
+                                var scale = 0.8;
+                                var width = value.width;
+                                var height = value.height;
+                                
+                                if(width > 1000 || height > 1000){
+                                    scale = 0.8;
+                                } else if(width > 1500 || height > 1500){
+                                    scale = 0.7;
+                                } else if(width > 2000 || height > 2000){
+                                    scale = 0.6;
+                                } else if(width > 3000 || height > 3000){
+                                    scale = 0.4;
+                                } else {
+                                    scale = 1;
+                                };
+
+                                width *= scale;
+                                height *= scale;
+
+                                console.log(width);
+                                console.log(height);
+                                
+                                gmImage.resize(width, height).write(imagePath, (err)=>{
+                                    if(err)
+                                        console.error(err);
+                                    else
+                                        console.log('image resize done');
+                                });
+                            });
                             files.push({
                                     origin : filename,
                                     name : result,
