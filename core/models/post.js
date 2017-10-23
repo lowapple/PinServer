@@ -10,6 +10,7 @@ var postSchema = new Schema({
     contents: String, // 내용
     images: String,   // 이미지 리스트
     sns: String,      // SNS 리스트
+    tag: String,
     date : { type: Date, default: Date.now }
 });
 

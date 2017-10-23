@@ -17,6 +17,10 @@ module.exports = {
             var sns = JSON.parse(sns_list)["sns"];
             console.log(sns);
 
+            var tag_list = fields.find((value)=>{ return value.name == "tag" }).value;
+            var tag = JSON.parse(tag_lsit)["tag"];
+            console.log(tag);
+
             // Title
             var title = fields.find((value)=>{ return value.name == "title"; }).value;
             // Contents
@@ -49,7 +53,8 @@ module.exports = {
                             title : title,
                             contents : contents,
                             images : images,
-                            sns : sns
+                            sns : sns,
+                            tag : tag
                         });
 
                         post.save((err)=>{
