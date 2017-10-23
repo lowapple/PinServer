@@ -27,5 +27,30 @@ module.exports = {
                 })
             }
         });
+    },
+    get_post : (req, res) => {
+        SNS.find({
+            author : req.params.user_id
+        }, (err, sns)=>{
+            if(err) { console.error(err); return; }
+            if(sns){
+                res.json({ result : true, sns });
+            } else {
+                res.json({ result : false });
+            }
+        });
+    },
+    get_post_by_sns : (req, res) => {        
+        SNS.findOne({
+            author : req.params.user_id,
+            name : req.params.sns_name
+        }, (err, sns)=>{
+            if(err) return;
+            if(sns){
+                res.json({ result : true, sns });
+            } else {
+                res.json({ result : false });
+            }
+        });
     }
 }

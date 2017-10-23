@@ -27,6 +27,7 @@ var sns = require('./routes/sns');
 app.use('/', user);
 app.use('/', posts);
 app.use('/', media);
+app.use('/', sns);
 
 app.get('/', function(req, res) {
     res.send('PinPost API Server');
