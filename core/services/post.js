@@ -18,8 +18,8 @@ module.exports = {
             console.log(sns);
 
             var tag_list = fields.find((value)=>{ return value.name == "tag" }).value;
-            var tag = JSON.parse(tag_lsit)["tag"];
-            console.log(tag);
+            // var tag = JSON.parse(tag_lsit)["tag"];
+            console.log(tag_list);
 
             // Title
             var title = fields.find((value)=>{ return value.name == "title"; }).value;
@@ -54,7 +54,7 @@ module.exports = {
                             contents : contents,
                             images : images,
                             sns : sns,
-                            tag : tag
+                            tag : tag_list
                         });
 
                         post.save((err)=>{
@@ -95,5 +95,50 @@ module.exports = {
                 res.json({ result : null })
             res.json({posts});
         }).sort({ date : -1 }).skip(page).limit(10);
+    },
+    remove_posts : (req, res) => {
+        // 포스트 DB에서 삭제
+        Post.findOneAndRemove({
+            author : req.body.user_id,
+            id : req.body.post_id 
+        }, (err, post)=>{
+            if(err){
+                console.debug(err);
+                res.json({
+                    result : false,
+                    err : err
+                });
+            } else {
+                if (!post){
+                    res.json({
+                        result : false
+                    });
+                } else {
+                    // SNS 카운트 제거
+                    // Media 제거
+                    // 이미지 제거
+                    var imageList = post.images.split(',');
+                    var snsList = post.sns.split(',');
+
+                    imageList.forEach((value, index)=>{
+                        require('./media').remove_media(value).then((value)=>{
+                            if(value != false){
+                                fileLoader.remove_image(value.filename, value.filetype);
+                            }
+                        });
+                    });
+                    
+                    snsList.forEach((value, index)=>{
+                        if(value != ''){
+                            require('./sns').remove_post(req.body.user_id, value);
+                        }
+                    });
+
+                    res.json({
+                        result : true
+                    });
+                }
+            }
+        });
     }
 };

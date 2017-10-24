@@ -13,4 +13,8 @@ router.post('/post/postlist', (req, res)=>{
     post.get_posts(req, res);
 });
 
+router.post('/post/remove', (req, res)=>{
+    post.remove_posts(req, res);
+});
+
 module.exports = router;

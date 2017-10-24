@@ -52,5 +52,19 @@ module.exports = {
                 res.json({ result : false });
             }
         });
+    },
+    remove_post: (user_id, sns_ame) =>{
+        SNS.findOne({
+            author : user_id,
+            name : sns_name
+        }, (err, sns)=>{
+            if(err) { console.error(err); return; }
+            if(sns){
+                sns.count -= 1;
+                sns.save();
+            } else {
+                console.log('sns count down error');
+            }
+        });
     }
 }

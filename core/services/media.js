@@ -35,5 +35,29 @@ module.exports = {
         }).sort({
             count : 1
         });
+    },
+    remove_media: (id)=>{
+        var promise = new Promise((resolve, reject)=>{
+            Media.find({
+                id : id
+            }, (err, media)=>{
+                if(err) {
+                    console.error(err);
+                    resolve(false);
+                }else {
+                    if(!media){
+                        console.log('media remove error');
+                        resolve(false);
+                    }else {
+                        resolve({
+                            filename : media.id,
+                            filetype : media.type
+                        });
+                    }
+                }
+            });
+        });
+
+        return promise;
     }
 };

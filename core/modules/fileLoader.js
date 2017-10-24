@@ -111,5 +111,10 @@ module.exports = {
             });
         });
         return promise;
+    }, 
+    remove_image: (filename, filetype) =>{
+        var path = '.' + config.path.image + '/' + filename + '.' + filetype;
+        console.log('remove image ' + path);
+        fs.unlinkSync(path);
     }
 }
