@@ -2,6 +2,11 @@
 var User = require('../models/user');
 var config = require('../config');
 
+// TODO
+// 보안 관련 모듈 추가하기
+// 패스워드 암호화
+// 이메일 인증 서비스 추가하기
+
 module.exports = {
     /*
     * Find User ( request )

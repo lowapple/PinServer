@@ -4,8 +4,16 @@ var dispersion = require('../modules/dispersion');
 var fileLoader = require('../modules/fileLoader');
 var Post = require('../models/post');
 
+// TODO
+
+// 1. 포스트 수정 시 연관 데이터 수정
+// ( SNS, MEDIA ) 연결된 것 처리하기
+// Prev, Next 비교
+
+
 // Post 관련 함수
 module.exports = {
+    // 포스트 데이터를 입력함
     posting_query : (req, res, data)=>{
         try{
             var fields = data.fields;
@@ -79,11 +87,14 @@ module.exports = {
             });
         }
     },
+    // posting_query를 사용하여
+    // 데이터를 입력한다.
     posting : (req, res)=>{
         fileLoader.get_postdata(req).then((data)=>{
             require('./post').posting_query(req, res, data);
         });
     },
+    // 포스트 데이터를 받아옴
     get_posts : (req, res)=>{
         var user_id = req.body.user_id;
         var page = parseInt(req.body.page);
@@ -96,6 +107,7 @@ module.exports = {
             res.json({posts});
         }).sort({ date : -1 }).skip(page).limit(10);
     },
+    // 포스트 항목을 삭제함
     remove_posts : (req, res) => {
         // 포스트 DB에서 삭제
         Post.findOneAndRemove({
